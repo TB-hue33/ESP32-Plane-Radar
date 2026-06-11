@@ -1,3 +1,4 @@
+
 #pragma once
 
 // =============================================================================
@@ -42,13 +43,16 @@ constexpr const char* kPortalHostUrl  = "http://plane-radar.local";
 
 // ---------------------------------------------------------------------------
 // WiFi timing
-// Exact names required by wifi_setup.cpp (verified from compiler errors).
+// All names verified against actual usage in main.cpp and wifi_setup.cpp.
 // kWifiPortalTimeoutSec = 0 means autoConnect() returns immediately
 // when saved credentials work — the portal is never shown.
 // ---------------------------------------------------------------------------
-constexpr int kWifiPortalTimeoutSec  = 0;     // 0 = no portal timeout
-constexpr int kWifiConnectAttemptMs  = 10000; // ms to wait for initial connect
-constexpr int kWifiConnectingFrameMs = 100;   // ms per status-screen refresh
+constexpr int kWifiPortalTimeoutSec   = 0;     // 0 = no portal timeout
+constexpr int kWifiConnectAttemptMs   = 10000; // ms to wait per connect attempt
+constexpr int kWifiConnectingFrameMs  = 100;   // ms per status-screen refresh tick
+constexpr int kWifiConnectAttempts    = 3;     // number of connect retries (wifi_setup.cpp)
+constexpr int kWifiDownGraceMs        = 5000;  // ms WiFi can be down before reconnect (main.cpp)
+constexpr int kWifiReconnectIntervalMs= 30000; // ms between reconnect attempts (main.cpp)
 
 // ---------------------------------------------------------------------------
 // BOOT button  (GPIO 9, active LOW)
