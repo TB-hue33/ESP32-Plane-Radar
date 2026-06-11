@@ -1,4 +1,3 @@
-
 #pragma once
 
 // =============================================================================
@@ -9,26 +8,20 @@
 // Changes made:
 //   1. Added kWifiSsid + kWifiPassword  — hardcoded WiFi credentials.
 //   2. Set kDefaultRadarLat / kDefaultRadarLon to your fixed location.
-//   3. kWifiPortalTimeoutSec = 0 so WiFiManager never blocks waiting for
-//      a portal interaction (it connects immediately using saved credentials).
-//
-// The original source files (main.cpp, wifi_setup.cpp, adsb_client.cpp, etc.)
-// are left completely unchanged.
+//   3. kWifiPortalTimeoutSec = 0 so WiFiManager never shows the portal.
+//   4. Added all constants discovered via compiler errors across 4 build runs.
 // =============================================================================
 
 namespace config {
 
 // ---------------------------------------------------------------------------
 // Hardcoded WiFi credentials
-// wifi_setup.cpp will use these to pre-populate and auto-connect.
 // ---------------------------------------------------------------------------
 constexpr const char* kWifiSsid     = "ToroBravo";
 constexpr const char* kWifiPassword = "Sneakerman33";
 
 // ---------------------------------------------------------------------------
 // Fixed radar location  (Garden City / Long Island, NY)
-// radar_location.cpp uses these as the default when NVS has no saved position.
-// After first boot they are stored in NVS and the portal is never needed.
 // ---------------------------------------------------------------------------
 constexpr double kDefaultRadarLat = 40.74543;
 constexpr double kDefaultRadarLon = -73.64251;
@@ -42,17 +35,15 @@ constexpr const char* kPortalHostname = "plane-radar";
 constexpr const char* kPortalHostUrl  = "http://plane-radar.local";
 
 // ---------------------------------------------------------------------------
-// WiFi timing
-// All names verified against actual usage in main.cpp and wifi_setup.cpp.
-// kWifiPortalTimeoutSec = 0 means autoConnect() returns immediately
-// when saved credentials work — the portal is never shown.
+// WiFi timing  (all names verified from wifi_setup.cpp + main.cpp errors)
+// kWifiPortalTimeoutSec = 0 → autoConnect() never blocks on the portal
 // ---------------------------------------------------------------------------
-constexpr int kWifiPortalTimeoutSec   = 0;     // 0 = no portal timeout
-constexpr int kWifiConnectAttemptMs   = 10000; // ms to wait per connect attempt
-constexpr int kWifiConnectingFrameMs  = 100;   // ms per status-screen refresh tick
-constexpr int kWifiConnectAttempts    = 3;     // number of connect retries (wifi_setup.cpp)
-constexpr int kWifiDownGraceMs        = 5000;  // ms WiFi can be down before reconnect (main.cpp)
-constexpr int kWifiReconnectIntervalMs= 30000; // ms between reconnect attempts (main.cpp)
+constexpr int kWifiPortalTimeoutSec    = 0;     // 0 = no portal timeout
+constexpr int kWifiConnectAttemptMs    = 10000; // ms to wait per connect attempt
+constexpr int kWifiConnectingFrameMs   = 100;   // ms per status-screen refresh tick
+constexpr int kWifiConnectAttempts     = 3;     // retry count (wifi_setup.cpp)
+constexpr int kWifiDownGraceMs         = 5000;  // ms WiFi can be down before reconnect
+constexpr int kWifiReconnectIntervalMs = 30000; // ms between reconnect attempts
 
 // ---------------------------------------------------------------------------
 // BOOT button  (GPIO 9, active LOW)
@@ -62,8 +53,8 @@ constexpr int kBootResetHoldMs = 3000;
 constexpr int kBootTapMinMs    = 50;
 
 // ---------------------------------------------------------------------------
-// Display  (GC9A01 SPI)
-// Exact names required by lgfx_config.hpp (verified from compiler errors).
+// Display  (GC9A01 round 240×240, SPI)
+// Names verified from lgfx_config.hpp and status_screens.cpp errors.
 // ---------------------------------------------------------------------------
 constexpr int  kDisplayPinRst     = 0;
 constexpr int  kDisplayPinCs      = 1;
@@ -73,10 +64,17 @@ constexpr int  kDisplayPinSclk    = 4;
 constexpr bool kDisplayInvert     = true;
 constexpr bool kDisplayRgbOrder   = false;    // false = BGR
 constexpr int  kDisplaySpiWriteHz = 80000000;
+constexpr int  kDisplayWidth      = 240;
+constexpr int  kDisplayHeight     = 240;
+
+// Display colors (RGB565) — verified from status_screens.cpp errors
+constexpr uint16_t kColorBlack   = 0x0000;
+constexpr uint16_t kColorYellow  = 0xFFE0;
+constexpr uint16_t kTextOnBlack  = 0xFFFF;  // white on black
+constexpr uint16_t kTextOnYellow = 0x0000;  // black on yellow
 
 // ---------------------------------------------------------------------------
-// ADS-B
-// Exact names required by adsb_client.cpp (verified from compiler errors).
+// ADS-B  (names verified from adsb_client.cpp + main.cpp errors)
 // ---------------------------------------------------------------------------
 constexpr int  kAdsbFetchIntervalMs    = 5000;  // 5 s poll
 constexpr bool kAdsbShowGroundAircraft = false; // hide ground traffic
